@@ -60,7 +60,7 @@ import com.ems.estatemanagementsystem.service.propertyservice.landservice.WaqfSe
 
 @Controller
 public class PropertyController {
-    
+
     @Autowired
     private PropertyService propertyService;
     @Autowired
@@ -107,7 +107,7 @@ public class PropertyController {
     private LandService landService;
     @Autowired
     private ContractService contractService;
-    
+
     public PropertyController(PropertyService propertyService, UserService userService) {
         this.propertyService = propertyService;
         this.userService = userService;
@@ -117,9 +117,9 @@ public class PropertyController {
         return userService.getCurrentUser();
     }
 
-    //display list of properties
+    // display list of properties
     @GetMapping("/propertyList")
-    public String propertyList(Model model){
+    public String propertyList(Model model) {
         User loggedInUser = getLoggedInUser();
         List<Property> propertyList = propertyService.getPropertiesByUser(loggedInUser);
 
@@ -130,9 +130,9 @@ public class PropertyController {
         return "propertyList";
     }
 
-    //BOND
+    // BOND
     @GetMapping("/formbond")
-    public String formbond(Model model){
+    public String formbond(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -146,7 +146,7 @@ public class PropertyController {
     }
 
     @PostMapping("/saveBond")
-    public String saveBond(@ModelAttribute("Bond") Bond bond, Model model){
+    public String saveBond(@ModelAttribute("Bond") Bond bond, Model model) {
 
         bondService.saveBond(bond);
         model.addAttribute("successMessage", "Bond saved successfully!");
@@ -155,7 +155,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formbondupdate/{id}")
-    public String formbondupdate(@PathVariable Long id, Model model){
+    public String formbondupdate(@PathVariable Long id, Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -168,23 +168,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveBondUpdate")
-    public String saveBondUpdate(@ModelAttribute("Bond") Bond bond, Model model){
+    public String saveBondUpdate(@ModelAttribute("Bond") Bond bond, Model model) {
         bondService.updateBond(bond);
-        
+
         model.addAttribute("successMessage", "Bond saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteBond/{id}")
-	public String deleteBond(@PathVariable Long id) {
-		bondService.deleteBondById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteBond(@PathVariable Long id) {
+        bondService.deleteBondById(id);
+        return "redirect:/propertyList";
+    }
 
-    //CAVEAT
+    // CAVEAT
     @GetMapping("/formcaveat")
-    public String formcaveat(Model model){
+    public String formcaveat(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -198,10 +198,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveCaveat")
-    public String saveCaveat(@ModelAttribute("Caveat") Caveat caveat, Model model){
+    public String saveCaveat(@ModelAttribute("Caveat") Caveat caveat, Model model) {
         Land existingLand = landService.getLandByTitleId(caveat.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formcaveat";
@@ -213,7 +213,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formcaveatupdate/{id}")
-    public String formcaveatupdate(@PathVariable Long id, Model model){
+    public String formcaveatupdate(@PathVariable Long id, Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -226,23 +226,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveCaveatUpdate")
-    public String saveCaveatUpdate(@ModelAttribute("Caveat") Caveat caveat, Model model){
+    public String saveCaveatUpdate(@ModelAttribute("Caveat") Caveat caveat, Model model) {
         caveatService.updateCaveat(caveat);
-        
+
         model.addAttribute("successMessage", "Caveat saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteCaveat/{id}")
-	public String deleteCaveat(@PathVariable Long id) {
-		caveatService.deleteCaveatById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteCaveat(@PathVariable Long id) {
+        caveatService.deleteCaveatById(id);
+        return "redirect:/propertyList";
+    }
 
-    //CHARGE
+    // CHARGE
     @GetMapping("/formcharge")
-    public String formcharge(Model model){
+    public String formcharge(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -256,10 +256,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveCharge")
-    public String saveCharge(@ModelAttribute("Charge") Charge charge, Model model){
+    public String saveCharge(@ModelAttribute("Charge") Charge charge, Model model) {
         Land existingLand = landService.getLandByTitleId(charge.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formcharge";
@@ -271,7 +271,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formchargeupdate/{id}")
-    public String formchargeupdate(@PathVariable Long id, Model model){
+    public String formchargeupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -285,23 +285,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveChargeUpdate")
-    public String saveChargeUpdate(@ModelAttribute("Charge") Charge charge, Model model){
+    public String saveChargeUpdate(@ModelAttribute("Charge") Charge charge, Model model) {
         chargeService.updateCharge(charge);
-        
+
         model.addAttribute("successMessage", "Charge saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteCharge/{id}")
-	public String deleteCharge(@PathVariable Long id) {
-		chargeService.deleteChargeById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteCharge(@PathVariable Long id) {
+        chargeService.deleteChargeById(id);
+        return "redirect:/propertyList";
+    }
 
-    //EASEMENT
+    // EASEMENT
     @GetMapping("/formeasement")
-    public String formeasement(Model model){
+    public String formeasement(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -315,10 +315,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveEasement")
-    public String saveEasement(@ModelAttribute("Easement") Easement easement, Model model){
+    public String saveEasement(@ModelAttribute("Easement") Easement easement, Model model) {
         Land existingLand = landService.getLandByTitleId(easement.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formeasement";
@@ -330,7 +330,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formeasementupdate/{id}")
-    public String formeasementupdate(@PathVariable Long id, Model model){
+    public String formeasementupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -344,23 +344,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveEasementUpdate")
-    public String saveEasementUpdate(@ModelAttribute("Easement") Easement easement, Model model){
+    public String saveEasementUpdate(@ModelAttribute("Easement") Easement easement, Model model) {
         easementService.updateEasement(easement);
-        
+
         model.addAttribute("successMessage", "Easement saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteEasement/{id}")
-	public String deleteEasement(@PathVariable Long id) {
-		easementService.deleteEasementById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteEasement(@PathVariable Long id) {
+        easementService.deleteEasementById(id);
+        return "redirect:/propertyList";
+    }
 
-    //LEASE
+    // LEASE
     @GetMapping("/formlease")
-    public String formlease(Model model){
+    public String formlease(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -374,10 +374,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveLease")
-    public String saveLease(@ModelAttribute("Lease") Lease lease, Model model){
+    public String saveLease(@ModelAttribute("Lease") Lease lease, Model model) {
         Land existingLand = landService.getLandByTitleId(lease.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formlease";
@@ -389,7 +389,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formleaseupdate/{id}")
-    public String formleaseupdate(@PathVariable Long id, Model model){
+    public String formleaseupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -403,23 +403,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveLeaseUpdate")
-    public String saveLeaseUpdate(@ModelAttribute("Lease") Lease lease, Model model){
+    public String saveLeaseUpdate(@ModelAttribute("Lease") Lease lease, Model model) {
         leaseService.updateLease(lease);
-        
+
         model.addAttribute("successMessage", "Lease saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteLease/{id}")
-	public String deleteLease(@PathVariable Long id) {
-		leaseService.deleteLeaseById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteLease(@PathVariable Long id) {
+        leaseService.deleteLeaseById(id);
+        return "redirect:/propertyList";
+    }
 
-    //MAINTENANCE
+    // MAINTENANCE
     @GetMapping("/formmaintenance")
-    public String formmaintenance(Model model){
+    public String formmaintenance(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -433,10 +433,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveMaintenance")
-    public String saveMaintenance(@ModelAttribute("Maintenance") Maintenance maintenance, Model model){
+    public String saveMaintenance(@ModelAttribute("Maintenance") Maintenance maintenance, Model model) {
         Land existingLand = landService.getLandByTitleId(maintenance.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formmaintenance";
@@ -448,7 +448,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formmaintenanceupdate/{id}")
-    public String formmaintenanceupdate(@PathVariable Long id, Model model){
+    public String formmaintenanceupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -462,23 +462,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveMaintenanceUpdate")
-    public String saveMaintenanceUpdate(@ModelAttribute("Maintenance") Maintenance maintenance, Model model){
+    public String saveMaintenanceUpdate(@ModelAttribute("Maintenance") Maintenance maintenance, Model model) {
         maintenanceService.updateMaintenance(maintenance);
-        
+
         model.addAttribute("successMessage", "Maintenance saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteMaintenance/{id}")
-	public String deleteMaintenance(@PathVariable Long id) {
-		maintenanceService.deleteMaintenanceById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteMaintenance(@PathVariable Long id) {
+        maintenanceService.deleteMaintenanceById(id);
+        return "redirect:/propertyList";
+    }
 
-    //MORTGAGE
+    // MORTGAGE
     @GetMapping("/formmortgage")
-    public String formmortgage(Model model){
+    public String formmortgage(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -492,10 +492,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveMortgage")
-    public String saveMortgage(@ModelAttribute("Mortgage") Mortgage mortgage, Model model){
+    public String saveMortgage(@ModelAttribute("Mortgage") Mortgage mortgage, Model model) {
         Land existingLand = landService.getLandByTitleId(mortgage.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formmortgage";
@@ -507,7 +507,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formmortgageupdate/{id}")
-    public String formmortgageupdate(@PathVariable Long id, Model model){
+    public String formmortgageupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -521,23 +521,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveMortgageUpdate")
-    public String saveMortgageUpdate(@ModelAttribute("Mortgage") Mortgage mortgage, Model model){
+    public String saveMortgageUpdate(@ModelAttribute("Mortgage") Mortgage mortgage, Model model) {
         mortgageService.updateMortgage(mortgage);
-        
+
         model.addAttribute("successMessage", "Mortgage saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteMortgage/{id}")
-	public String deleteMortgage(@PathVariable Long id) {
-		mortgageService.deleteMortgageById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteMortgage(@PathVariable Long id) {
+        mortgageService.deleteMortgageById(id);
+        return "redirect:/propertyList";
+    }
 
-    //QUITRENT
+    // QUITRENT
     @GetMapping("/formquitrent")
-    public String formquitrent(Model model){
+    public String formquitrent(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -551,10 +551,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveQuitRent")
-    public String saveQuitRent(@ModelAttribute("QuitRent") QuitRent quitRent, Model model){
+    public String saveQuitRent(@ModelAttribute("QuitRent") QuitRent quitRent, Model model) {
         Land existingLand = landService.getLandByTitleId(quitRent.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formquitrent";
@@ -565,7 +565,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formquitrentupdate/{id}")
-    public String formquitrentupdate(@PathVariable Long id, Model model){
+    public String formquitrentupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -579,23 +579,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveQuitRentUpdate")
-    public String saveQuitRentUpdate(@ModelAttribute("QuitRent") QuitRent quitRent, Model model){
+    public String saveQuitRentUpdate(@ModelAttribute("QuitRent") QuitRent quitRent, Model model) {
         quitRentService.updateQuitRent(quitRent);
-        
+
         model.addAttribute("successMessage", "Quit Rent saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteQuitRent/{id}")
-	public String deleteQuitRent(@PathVariable Long id) {
-		quitRentService.deleteQuitRentById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteQuitRent(@PathVariable Long id) {
+        quitRentService.deleteQuitRentById(id);
+        return "redirect:/propertyList";
+    }
 
-    //RIGHTOFWAY
+    // RIGHTOFWAY
     @GetMapping("/formrightofway")
-    public String formrightofway(Model model){
+    public String formrightofway(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -609,10 +609,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveRightOfWay")
-    public String saveRightOfWay(@ModelAttribute("RightOfWay") RightOfWay rightOfWay, Model model){
+    public String saveRightOfWay(@ModelAttribute("RightOfWay") RightOfWay rightOfWay, Model model) {
         Land existingLand = landService.getLandByTitleId(rightOfWay.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formrightofway";
@@ -623,7 +623,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formrightofwayupdate/{id}")
-    public String formrightofwayupdate(@PathVariable Long id, Model model){
+    public String formrightofwayupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -637,23 +637,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveRightOfWayUpdate")
-    public String saveRightOfWayUpdate(@ModelAttribute("RightOfWay") RightOfWay rightOfWay, Model model){
+    public String saveRightOfWayUpdate(@ModelAttribute("RightOfWay") RightOfWay rightOfWay, Model model) {
         rightOfWayService.updateRightOfWay(rightOfWay);
-        
+
         model.addAttribute("successMessage", "Right Of Way saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteRightOfWay/{id}")
-	public String deleteRightOfWay(@PathVariable Long id) {
-		rightOfWayService.deleteRightOfWayById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteRightOfWay(@PathVariable Long id) {
+        rightOfWayService.deleteRightOfWayById(id);
+        return "redirect:/propertyList";
+    }
 
-    //TENANCY
+    // TENANCY
     @GetMapping("/formtenancy")
-    public String formtenancy(Model model){
+    public String formtenancy(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -667,10 +667,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveTenancy")
-    public String saveTenancy(@ModelAttribute("Tenancy") Tenancy tenancy, Model model){
+    public String saveTenancy(@ModelAttribute("Tenancy") Tenancy tenancy, Model model) {
         Land existingLand = landService.getLandByTitleId(tenancy.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formtenancy";
@@ -681,7 +681,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formtenancyupdate/{id}")
-    public String formtenancyupdate(@PathVariable Long id, Model model){
+    public String formtenancyupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -695,23 +695,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveTenancyUpdate")
-    public String saveTenancyUpdate(@ModelAttribute("Tenancy") Tenancy tenancy, Model model){
+    public String saveTenancyUpdate(@ModelAttribute("Tenancy") Tenancy tenancy, Model model) {
         tenancyService.updateTenancy(tenancy);
-        
+
         model.addAttribute("successMessage", "Tenancy saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteTenancy/{id}")
-	public String deleteTenancy(@PathVariable Long id) {
-		tenancyService.deleteTenancyById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteTenancy(@PathVariable Long id) {
+        tenancyService.deleteTenancyById(id);
+        return "redirect:/propertyList";
+    }
 
-    //TRANSFER
+    // TRANSFER
     @GetMapping("/formtransfer")
-    public String formtransfer(Model model){
+    public String formtransfer(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -725,10 +725,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveTransfer")
-    public String saveTransfer(@ModelAttribute("Transfer") Transfer transfer, Model model){
+    public String saveTransfer(@ModelAttribute("Transfer") Transfer transfer, Model model) {
         Land existingLand = landService.getLandByTitleId(transfer.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formtransfer";
@@ -740,7 +740,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formtransferupdate/{id}")
-    public String formtransferupdate(@PathVariable Long id, Model model){
+    public String formtransferupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -754,23 +754,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveTransferUpdate")
-    public String saveTransferUpdate(@ModelAttribute("Transfer") Transfer transfer, Model model){
+    public String saveTransferUpdate(@ModelAttribute("Transfer") Transfer transfer, Model model) {
         transferService.updateTransfer(transfer);
-        
+
         model.addAttribute("successMessage", "Transfer saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteTransfer/{id}")
-	public String deleteTransfer(@PathVariable Long id) {
-		transferService.deleteTransferById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteTransfer(@PathVariable Long id) {
+        transferService.deleteTransferById(id);
+        return "redirect:/propertyList";
+    }
 
-    //UTILITIESBILL
+    // UTILITIESBILL
     @GetMapping("/formutilitiesbill")
-    public String formutilitiesbill(Model model){
+    public String formutilitiesbill(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -784,10 +784,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveUtilitiesBill")
-    public String saveUtilitiesBill(@ModelAttribute("UtilitiesBill") UtilitiesBill utilitiesBill, Model model){
+    public String saveUtilitiesBill(@ModelAttribute("UtilitiesBill") UtilitiesBill utilitiesBill, Model model) {
         Land existingLand = landService.getLandByTitleId(utilitiesBill.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formutilitiesbill";
@@ -799,7 +799,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formutilitiesbillupdate/{id}")
-    public String formutilitiesbillupdate(@PathVariable Long id, Model model){
+    public String formutilitiesbillupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -813,23 +813,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveUtilitiesBillUpdate")
-    public String saveUtilitiesBillUpdate(@ModelAttribute("UtilitiesBill") UtilitiesBill utilitiesBill, Model model){
+    public String saveUtilitiesBillUpdate(@ModelAttribute("UtilitiesBill") UtilitiesBill utilitiesBill, Model model) {
         utilitiesBillService.updateUtilitiesBill(utilitiesBill);
-        
+
         model.addAttribute("successMessage", "Utilities Bill saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteUtilitiesBill/{id}")
-	public String deleteUtilitiesBill(@PathVariable Long id) {
-		utilitiesBillService.deleteUtilitiesBillById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteUtilitiesBill(@PathVariable Long id) {
+        utilitiesBillService.deleteUtilitiesBillById(id);
+        return "redirect:/propertyList";
+    }
 
-    //WAQF
+    // WAQF
     @GetMapping("/formwaqf")
-    public String formWaqf(Model model){
+    public String formWaqf(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -843,10 +843,10 @@ public class PropertyController {
     }
 
     @PostMapping("/saveWaqf")
-    public String saveWaqf(@ModelAttribute("Waqf") Waqf waqf, Model model){
+    public String saveWaqf(@ModelAttribute("Waqf") Waqf waqf, Model model) {
         Land existingLand = landService.getLandByTitleId(waqf.getTitleId());
 
-        if(existingLand != null){
+        if (existingLand != null) {
             model.addAttribute("msg", "Land with Title Id is already exist.");
 
             return "formwaqf";
@@ -857,7 +857,7 @@ public class PropertyController {
     }
 
     @GetMapping("/formwaqfupdate/{id}")
-    public String formwaqfupdate(@PathVariable Long id, Model model){
+    public String formwaqfupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -871,23 +871,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveWaqfUpdate")
-    public String saveWaqfUpdate(@ModelAttribute("Waqf") Waqf waqf, Model model){
+    public String saveWaqfUpdate(@ModelAttribute("Waqf") Waqf waqf, Model model) {
         waqfService.updateWaqf(waqf);
-        
+
         model.addAttribute("successMessage", "Waqf saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteWaqf/{id}")
-	public String deleteWaqf(@PathVariable Long id) {
-		waqfService.deleteWaqfById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteWaqf(@PathVariable Long id) {
+        waqfService.deleteWaqfById(id);
+        return "redirect:/propertyList";
+    }
 
-    //CASH
+    // CASH
     @GetMapping("/formcash")
-    public String formcash(Model model){
+    public String formcash(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -901,14 +901,14 @@ public class PropertyController {
     }
 
     @PostMapping("/saveCash")
-    public String saveCash(@ModelAttribute("Cash") Cash cash){
+    public String saveCash(@ModelAttribute("Cash") Cash cash) {
         cashService.saveCash(cash);
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/formcashupdate/{id}")
-    public String formcashupdate(@PathVariable Long id, Model model){
+    public String formcashupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -922,23 +922,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveCashUpdate")
-    public String saveCashUpdate(@ModelAttribute("Cash") Cash cash, Model model){
+    public String saveCashUpdate(@ModelAttribute("Cash") Cash cash, Model model) {
         cashService.updateCash(cash);
-        
+
         model.addAttribute("successMessage", "Cash saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteCash/{id}")
-	public String deleteCash(@PathVariable Long id) {
-		cashService.deleteCashById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteCash(@PathVariable Long id) {
+        cashService.deleteCashById(id);
+        return "redirect:/propertyList";
+    }
 
-    //DEBENTURE
+    // DEBENTURE
     @GetMapping("/formdebenture")
-    public String formdebenture(Model model){
+    public String formdebenture(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -952,14 +952,14 @@ public class PropertyController {
     }
 
     @PostMapping("/saveDebenture")
-    public String saveDebenture(@ModelAttribute("Debenture") Debenture debenture){
+    public String saveDebenture(@ModelAttribute("Debenture") Debenture debenture) {
         debentureService.saveDebenture(debenture);
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/formdebentureupdate/{id}")
-    public String formdebentureupdate(@PathVariable Long id, Model model){
+    public String formdebentureupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -973,23 +973,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveDebentureUpdate")
-    public String saveDebentureUpdate(@ModelAttribute("Debenture") Debenture debenture, Model model){
+    public String saveDebentureUpdate(@ModelAttribute("Debenture") Debenture debenture, Model model) {
         debentureService.updateDebenture(debenture);
-        
+
         model.addAttribute("successMessage", "Debenture saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteDebenture/{id}")
-	public String deleteDebenture(@PathVariable Long id) {
-		debentureService.deleteDebentureById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteDebenture(@PathVariable Long id) {
+        debentureService.deleteDebentureById(id);
+        return "redirect:/propertyList";
+    }
 
-    //INSURANCE
+    // INSURANCE
     @GetMapping("/forminsurance")
-    public String forminsurance(Model model){
+    public String forminsurance(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -1003,14 +1003,14 @@ public class PropertyController {
     }
 
     @PostMapping("/saveInsurance")
-    public String saveInsurance(@ModelAttribute("Insurance") Insurance insurance){
+    public String saveInsurance(@ModelAttribute("Insurance") Insurance insurance) {
         insuranceService.saveInsurance(insurance);
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/forminsuranceupdate/{id}")
-    public String forminsuranceupdate(@PathVariable Long id, Model model){
+    public String forminsuranceupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -1024,23 +1024,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveInsuranceUpdate")
-    public String saveInsuranceUpdate(@ModelAttribute("Insurance") Insurance insurance, Model model){
+    public String saveInsuranceUpdate(@ModelAttribute("Insurance") Insurance insurance, Model model) {
         insuranceService.updateInsurance(insurance);
-        
+
         model.addAttribute("successMessage", "Insurance saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteInsurance/{id}")
-	public String deleteInsurance(@PathVariable Long id) {
-		insuranceService.deleteInsuranceById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteInsurance(@PathVariable Long id) {
+        insuranceService.deleteInsuranceById(id);
+        return "redirect:/propertyList";
+    }
 
-    //SHARE
+    // SHARE
     @GetMapping("/formshare")
-    public String formshare(Model model){
+    public String formshare(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -1054,14 +1054,14 @@ public class PropertyController {
     }
 
     @PostMapping("/saveShare")
-    public String saveShare(@ModelAttribute("Share") Share share){
+    public String saveShare(@ModelAttribute("Share") Share share) {
         shareService.saveShare(share);
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/formshareupdate/{id}")
-    public String formshareupdate(@PathVariable Long id, Model model){
+    public String formshareupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -1075,23 +1075,23 @@ public class PropertyController {
     }
 
     @PostMapping("/saveShareUpdate")
-    public String saveShareUpdate(@ModelAttribute("Share") Share share, Model model){
+    public String saveShareUpdate(@ModelAttribute("Share") Share share, Model model) {
         shareService.updateShare(share);
-        
+
         model.addAttribute("successMessage", "Share saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteShare/{id}")
-	public String deleteShare(@PathVariable Long id) {
-		shareService.deleteShareById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteShare(@PathVariable Long id) {
+        shareService.deleteShareById(id);
+        return "redirect:/propertyList";
+    }
 
-    //UNITTRUST
+    // UNITTRUST
     @GetMapping("/formunittrust")
-    public String formunittrust(Model model){
+    public String formunittrust(Model model) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -1105,14 +1105,14 @@ public class PropertyController {
     }
 
     @PostMapping("/saveUnitTrust")
-    public String saveUnitTrust(@ModelAttribute("UnitTrust") UnitTrust unitTrust){
+    public String saveUnitTrust(@ModelAttribute("UnitTrust") UnitTrust unitTrust) {
         unitTrustService.saveUnitTrust(unitTrust);
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/formunittrustupdate/{id}")
-    public String formunittrust(@PathVariable Long id, Model model){
+    public String formunittrust(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
@@ -1126,24 +1126,24 @@ public class PropertyController {
     }
 
     @PostMapping("/saveUnitTrustUpdate")
-    public String saveUnitTrustUpdate(@ModelAttribute("UnitTrust") UnitTrust unitTrust, Model model){
+    public String saveUnitTrustUpdate(@ModelAttribute("UnitTrust") UnitTrust unitTrust, Model model) {
         unitTrustService.updateUnitTrust(unitTrust);
-        
+
         model.addAttribute("successMessage", "Unit Trust saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteUnitTrust/{id}")
-	public String deleteUnitTrust(@PathVariable Long id) {
-		unitTrustService.deleteUnitTrustById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteUnitTrust(@PathVariable Long id) {
+        unitTrustService.deleteUnitTrustById(id);
+        return "redirect:/propertyList";
+    }
 
-    //VEHICLE
+    // VEHICLE
     @GetMapping("/formvehicle")
     public String formvehicle(Model model,
-    @RequestParam(name="transactionHash", required = false) String transactionHash){
+            @RequestParam(name = "transactionHash", required = false) String transactionHash) {
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
@@ -1152,8 +1152,8 @@ public class PropertyController {
         Property vehicle = new Vehicle();
         vehicle.setUser(loggedInUser);
 
-        model.addAttribute("Vehicle", vehicle); 
-        model.addAttribute("transactionHash", transactionHash); 
+        model.addAttribute("Vehicle", vehicle);
+        model.addAttribute("transactionHash", transactionHash);
         return "formVehiclecontract";
     }
 
@@ -1161,70 +1161,73 @@ public class PropertyController {
     @ResponseBody
     public String saveTransactionHash(
             @RequestParam String transactionHash) {
-                try {
-                    // Save the transaction hash with the user-provided ID
-                    contractService.saveContract(transactionHash, "");
-                    return "Transaction hash saved successfully!";
-                } catch (Exception e) {
-                    return "Failed to save transaction hash: " + e.getMessage();
-                }
-            }
+        try {
+            // Save the transaction hash with the user-provided ID
+            String timestamp = java.time.LocalDateTime.now()
+                    .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            contractService.saveContract(transactionHash, timestamp);
+            return "Transaction hash saved successfully!";
+        } catch (Exception e) {
+            return "Failed to save transaction hash: " + e.getMessage();
+        }
+    }
 
-            @GetMapping("/view/formvehicle")
-            public String viewformvehiclecontract(Model model,
-            @RequestParam(name="transactionHash", required = false) String transactionHash){
-                User loggedInUser = getLoggedInUser();
-        
-                Long userId = loggedInUser.getId();
-                model.addAttribute("userId", userId);
-        
-                Property vehicle = new Vehicle();
-                vehicle.setUser(loggedInUser);
-        
-                model.addAttribute("Vehicle", vehicle); 
-                 model.addAttribute("userId", userId);
-                model.addAttribute("transactionHash", transactionHash); 
-                return "viewvehicleformcontract";
-            }
+    @GetMapping("/view/formvehicle")
+    public String viewformvehiclecontract(Model model,
+            @RequestParam(name = "transactionHash", required = false) String transactionHash) {
+        User loggedInUser = getLoggedInUser();
+
+        Long userId = loggedInUser.getId();
+        model.addAttribute("userId", userId);
+
+        Property vehicle = new Vehicle();
+        vehicle.setUser(loggedInUser);
+
+        model.addAttribute("Vehicle", vehicle);
+        model.addAttribute("userId", userId);
+        model.addAttribute("transactionHash", transactionHash);
+        return "viewvehicleformcontract";
+    }
 
     // @GetMapping("/formvehicle")
     // public String formvehicle(Model model){
-    //     User loggedInUser = getLoggedInUser();
+    // User loggedInUser = getLoggedInUser();
 
-    //     Long userId = loggedInUser.getId();
-    //     model.addAttribute("userId", userId);
+    // Long userId = loggedInUser.getId();
+    // model.addAttribute("userId", userId);
 
-    //     Property vehicle = new Vehicle();
-    //     vehicle.setUser(loggedInUser);
+    // Property vehicle = new Vehicle();
+    // vehicle.setUser(loggedInUser);
 
-    //     model.addAttribute("Vehicle", vehicle);
-    //     return "formVehicle";
+    // model.addAttribute("Vehicle", vehicle);
+    // return "formVehicle";
     // }
 
     // @PostMapping("/saveVehicle")
-    // public String saveVehicle(@ModelAttribute("Vehicle") Vehicle vehicle, Model model){
-    //     List<Vehicle> vehicles = vehicleService.getAllVehicles();
+    // public String saveVehicle(@ModelAttribute("Vehicle") Vehicle vehicle, Model
+    // model){
+    // List<Vehicle> vehicles = vehicleService.getAllVehicles();
 
-    //     for (Vehicle vehicleitem : vehicles) {
-    //         if(vehicle.getCarRegNum().equals(vehicleitem.getCarRegNum())){
-    //             model.addAttribute("msg", "Vehicle with registration number is existed.");
-    //             return "formVehicle";
-    //         }
-    //     }
-        
-    //     vehicleService.saveVehicle(vehicle);
+    // for (Vehicle vehicleitem : vehicles) {
+    // if(vehicle.getCarRegNum().equals(vehicleitem.getCarRegNum())){
+    // model.addAttribute("msg", "Vehicle with registration number is existed.");
+    // return "formVehicle";
+    // }
+    // }
 
-    //     return "redirect:/propertyList";
+    // vehicleService.saveVehicle(vehicle);
+
+    // return "redirect:/propertyList";
     // }
 
     @GetMapping("/formvehicleupdate/{id}")
-    public String formvehicleupdate(@PathVariable Long id, Model model){
+    public String formvehicleupdate(@PathVariable Long id, Model model) {
 
         User loggedInUser = getLoggedInUser();
 
         Long userId = loggedInUser.getId();
         model.addAttribute("userId", userId);
-        
+
         Vehicle exisitngVehicle = vehicleService.getVehicleById(id);
 
         model.addAttribute("Vehicle", exisitngVehicle);
@@ -1232,18 +1235,18 @@ public class PropertyController {
     }
 
     @PostMapping("/saveVehicleUpdate")
-    public String saveVehicleUpdate(@ModelAttribute("Vechile") Vehicle vehicle, Model model){
+    public String saveVehicleUpdate(@ModelAttribute("Vechile") Vehicle vehicle, Model model) {
         vehicleService.updateVehicle(vehicle);
-        
+
         model.addAttribute("successMessage", "Vehicle saved successfully!");
 
         return "redirect:/propertyList";
     }
 
     @GetMapping("/deleteVehicle/{id}")
-	public String deleteVehicle(@PathVariable Long id) {
-		vehicleService.deleteVehicleById(id);
-		return "redirect:/propertyList";
-	}
+    public String deleteVehicle(@PathVariable Long id) {
+        vehicleService.deleteVehicleById(id);
+        return "redirect:/propertyList";
+    }
 
 }

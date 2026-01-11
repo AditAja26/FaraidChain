@@ -44,20 +44,19 @@ public class PICController {
     public String savingPIC(@PathVariable Long externalAgencyId, @ModelAttribute PIC pic, Model model) {
         ExternalAgency externalAgency = externalAgencyService.getExternalAgencyById(externalAgencyId);
 
-        // Use Factory Method
+        // 1. Factory Creation
         PIC storedPIC = agencyComponentFactory.createPIC();
         storedPIC.setPicName(pic.getPicName());
         storedPIC.setPicPhoneNum(pic.getPicPhoneNum());
         storedPIC.setPicEmail(pic.getPicEmail());
         storedPIC.setExternalAgencyInfo(externalAgency);
 
-        // Check for transaction hash from form (set by MetaMask JS)
+        // 2. Data Population
         if (pic.getTxHash() != null && !pic.getTxHash().isEmpty()) {
-            // This setter triggers notifyObservers() -> Facade logs to ledger & sends email
             storedPIC.setTxHash(pic.getTxHash());
-            // Ensure status is updated if not already by setter logic (it is in entity)
         }
 
+        // 3. Service call (Call Subject)
         picService.savePIC(storedPIC);
         model.addAttribute("successMessage", "PIC saved successfully!");
         return "redirect:/admin/externalAgency/list/";

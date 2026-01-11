@@ -11,11 +11,13 @@ public class AgencyComponentFactory {
 
     public PIC createPIC() {
         PIC pic = new PIC();
+        pic.setStatus("PENDING");
         return pic;
     }
 
     public ExternalAgency createExternalAgency() {
         ExternalAgency agency = new ExternalAgency();
+        pic.setStatus("PENDING");
         return agency;
     }
 }
