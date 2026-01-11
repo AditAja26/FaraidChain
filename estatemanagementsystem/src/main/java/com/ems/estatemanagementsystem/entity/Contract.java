@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +25,9 @@ public class Contract {
 
     @Embedded
     private ContractDetail contractDetail; // Embedding the ContractDetail class
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }

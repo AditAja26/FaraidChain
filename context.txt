@@ -1,0 +1,28 @@
+1. The Design Pattern Trio
+We have pivoted to a specific set of patterns to ensure the system is extensible and decoupled:
+• Creational: Factory Method Pattern: Use an AgencyComponentFactory to handle the instantiation of PIC or ExternalAgency objects. This encapsulates creation logic and allows the system to support new agency types in the future without modifying existing code, satisfying the Open-Closed Principle (OCP).
+• Structural: Facade Pattern: Implement an AgencyServiceFacade to provide a simplified interface for the Controller. This Facade coordinates the complex interactions between the DatabaseService, BlockchainManager, and EmailService, shielding the client from subsystem internal complexity.
+• Behavioral: Refined Observer Pattern: To manage the one-to-many dependency required for a successful blockchain update, the Model (PIC entity) acts as the Subject. It notifies multiple Observers when its state changes to 'ACTIVE'.
+2. Adhering to the "Law of MVC"
+To ensure the design remains "system-grade" and satisfies the requirement that Models do not talk directly to other Models or Services:
+• The Subject: The PIC Model is the Subject but remains decoupled because it only knows about an abstract Observer interface.
+• The Observers: Two distinct components in the Controller/Service layer act as Observers:
+    1. PICController: Listens for the state change to refresh the user's dashboard View.
+    2. AgencyServiceFacade: Listens for the state change to trigger background business logic, such as the EmailService and LedgerLogService.
+• Justification: This creates a true one-to-many relationship while maintaining MVC boundaries.
+3. Adherence to OCP and Data Integrity
+The system must be open for extension but closed for modification.
+• Safe Update & Rollback: Before any update, the system must take a snapshot of the current state.
+• State Management: Records are initially saved as 'PENDING'. If the blockchain transaction fails, the Rollback Mechanism uses the snapshot to revert the local database to the "last known good state".
+• Future-Proofing: Additions of new services or agency types are handled through extension (adding new concrete factories or observers) rather than modifying the core algorithm.
+4. MetaMask Implementation (Consistency)
+The Agency module must use the same MetaMask implementation as the Estate module.
+• Transaction Flow: The frontend View interacts with MetaMask to record the transaction and retrieve a txHash.
+• Persistence: This txHash is passed to the AgencyServiceFacade, which updates the local record to 'ACTIVE' and notifies the LedgerLogService to record the hash in the local database for auditing.
+
+--------------------------------------------------------------------------------
+Summary Analogy for Antigravity: Think of this setup as a High-End Custom PC Build:
+• Factory Method: The Parts Picker who selects the right components (PIC/Agency) for the case.
+• Facade: The Power Button that starts the complex subsystems (DB/Blockchain) with one click.
+• Observer: The Status Lights on the case. When the internal hardware (Model) finishes its check, it sends a signal. The Monitor (Controller) shows "Ready" to the user, and the External Backup (Facade) starts its data log simultaneously.
+• MetaMask: The External Payment Terminal that provides the digital receipt (txHash) needed to unlock the system.
