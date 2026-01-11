@@ -17,7 +17,7 @@ public class AgencyComponentFactory {
 
     public ExternalAgency createExternalAgency() {
         ExternalAgency agency = new ExternalAgency();
-        pic.setStatus("PENDING");
+        agency.setStatus("PENDING");
         return agency;
     }
 }

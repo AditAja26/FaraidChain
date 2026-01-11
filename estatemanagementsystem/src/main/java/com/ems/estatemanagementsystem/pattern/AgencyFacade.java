@@ -34,7 +34,7 @@ public class AgencyFacade implements Observer {
         }
     }
 
-    public String processRegistrationDecision(String status, String txHash, String email) {
+    private String processRegistrationDecision(String status, String txHash, String email) {
         String action;
         boolean hasHash = (txHash != null && !txHash.isEmpty());
         boolean isActive = "ACTIVE".equals(status);
@@ -84,7 +84,6 @@ public class AgencyFacade implements Observer {
         }
     }
 
-    // Helper methods to keep the "Actions" clean
     private void logToLedger(String hash) {
         String timestamp = java.time.LocalDateTime.now()
                 .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

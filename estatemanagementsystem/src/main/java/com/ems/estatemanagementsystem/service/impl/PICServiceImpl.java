@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 
 import com.ems.estatemanagementsystem.pattern.AgencyFacade;
 import com.ems.estatemanagementsystem.pattern.Observer;
-
+import com.ems.estatemanagementsystem.pattern.Subject;
 import com.ems.estatemanagementsystem.dto.PICDTO;
 import com.ems.estatemanagementsystem.entity.PIC;
 import com.ems.estatemanagementsystem.repository.PICRepository;
 import com.ems.estatemanagementsystem.service.PICService;
 
 @Service
-public class PICServiceImpl implements PICService {
+public class PICServiceImpl implements PICService, Subject {
 
     private final PICRepository picRepository;
     private final List<Observer> observers = new ArrayList<>();

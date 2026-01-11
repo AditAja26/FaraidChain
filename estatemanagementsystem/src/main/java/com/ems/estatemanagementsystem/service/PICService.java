@@ -6,7 +6,7 @@ import com.ems.estatemanagementsystem.dto.PICDTO;
 import com.ems.estatemanagementsystem.entity.PIC;
 import com.ems.estatemanagementsystem.pattern.Subject;
 
-public interface PICService extends Subject {
+public interface PICService {
 
     PIC savePIC(PIC pic);
 
