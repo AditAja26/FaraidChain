@@ -1,8 +1,10 @@
 package com.ems.estatemanagementsystem.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,23 +12,19 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-
-import com.ems.estatemanagementsystem.pattern.Observer;
-import com.ems.estatemanagementsystem.pattern.Subject;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "external_agency")
-public class ExternalAgency implements Subject {
+public class ExternalAgency {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,25 +37,26 @@ public class ExternalAgency implements Subject {
     private String email;
 
     @Column(nullable = false)
-    private String phoneNum;
-
-    @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
     private String postcode;
 
     @Column(nullable = false)
+    private String state;
+
+    @Column(nullable = true)
     private String district;
 
     @Column(nullable = false)
-    private String state;
+    private String phoneNum;
 
-    @OneToMany(mappedBy = "externalAgencyInfo")
-    private List<PIC> pics;
+    @Column(nullable = false)
+    private double serviceFee;
 
-    @Column(nullable = true)
-    private float serviceFee;
+    @JsonIgnore
+    @OneToMany(mappedBy = "externalAgencyInfo", cascade = CascadeType.ALL)
+    private List<PIC> pic;
 
     @Column(name = "tx_hash")
     private String txHash;
@@ -65,29 +64,8 @@ public class ExternalAgency implements Subject {
     @Column(name = "status")
     private String status = "PENDING";
 
-    @Transient
-    private List<Observer> observers = new ArrayList<>();
-
-    @Override
-    public void registerObserver(Observer observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(Observer observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyObservers() {
-        for (Observer observer : observers) {
-            observer.update(this);
-        }
-    }
-
     public void setTxHash(String txHash) {
         this.txHash = txHash;
         this.status = "ACTIVE";
-        notifyObservers();
     }
 }

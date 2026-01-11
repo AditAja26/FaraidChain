@@ -1,10 +1,17 @@
 package com.ems.estatemanagementsystem.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ems.estatemanagementsystem.pattern.AgencyFacade;
+import com.ems.estatemanagementsystem.pattern.Observer;
+import com.ems.estatemanagementsystem.pattern.Subject;
 
 import com.ems.estatemanagementsystem.dto.ExternalAgencyDTO;
 import com.ems.estatemanagementsystem.entity.ExternalAgency;
@@ -12,23 +19,37 @@ import com.ems.estatemanagementsystem.repository.ExternalAgencyRepository;
 import com.ems.estatemanagementsystem.service.ExternalAgencyService;
 
 @Service
-public class ExternalAgencyServiceImpl implements ExternalAgencyService{
-    
-    private ExternalAgencyRepository externalAgencyRepository;
+public class ExternalAgencyServiceImpl implements ExternalAgencyService, Subject {
 
-    public ExternalAgencyServiceImpl (ExternalAgencyRepository externalAgencyRepository) {
+    private final ExternalAgencyRepository externalAgencyRepository;
+    private final List<Observer> observers = new ArrayList<>();
+
+    @Autowired
+    private AgencyFacade agencyFacade;
+
+    public ExternalAgencyServiceImpl(ExternalAgencyRepository externalAgencyRepository) {
         this.externalAgencyRepository = externalAgencyRepository;
     }
 
+    @PostConstruct
+    public void init() {
+        this.registerObserver(agencyFacade);
+    }
+
     @Override
-    public ExternalAgency saveExternalAgency(ExternalAgency externalAgency){
-        return externalAgencyRepository.save(externalAgency);
+    public ExternalAgency saveExternalAgency(ExternalAgency externalAgency) {
+        ExternalAgency savedAgency = externalAgencyRepository.save(externalAgency);
+        // Should we notify on creation? Usually logic was on TxHash update.
+        // If TxHash is present on creation (which shouldn't happen for ExternalAgency
+        // creation flow usually), we might want to notify.
+        // Assuming updateExternalAgency is the main place for TxHash updates.
+        return savedAgency;
     }
 
     @Override
     public List<ExternalAgencyDTO> getExternalAgencyList() {
         List<ExternalAgency> externalAgencyList = externalAgencyRepository.findAll();
-        return externalAgencyList.stream().map((externalAgency) -> convertEntityToDto(externalAgency))
+        return externalAgencyList.stream().map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +63,7 @@ public class ExternalAgencyServiceImpl implements ExternalAgencyService{
         externalAgencyDTO.setState(externalAgency.getState());
         externalAgencyDTO.setDistrict(externalAgency.getDistrict());
         externalAgencyDTO.setPhoneNum(externalAgency.getPhoneNum());
-        externalAgencyDTO.setServiceFee(externalAgency.getServiceFee());
+        externalAgencyDTO.setServiceFee((float) externalAgency.getServiceFee());
         return externalAgencyDTO;
     }
 
@@ -50,7 +71,7 @@ public class ExternalAgencyServiceImpl implements ExternalAgencyService{
     public ExternalAgency getExternalAgencyById(Long externalAgencyId) {
         Optional<ExternalAgency> chosenExternalAgency = externalAgencyRepository.findById(externalAgencyId);
 
-        if(chosenExternalAgency.isPresent()) {
+        if (chosenExternalAgency.isPresent()) {
             ExternalAgency currentExternalAgency = chosenExternalAgency.get();
             return currentExternalAgency;
         } else {
@@ -70,12 +91,36 @@ public class ExternalAgencyServiceImpl implements ExternalAgencyService{
         existingExternalAgency.setState(externalAgency.getState());
         existingExternalAgency.setPhoneNum(externalAgency.getPhoneNum());
         existingExternalAgency.setServiceFee(externalAgency.getServiceFee());
-        
-        return externalAgencyRepository.save(existingExternalAgency);
+
+        // Also check if TxHash is being updated.
+        if (externalAgency.getTxHash() != null) {
+            existingExternalAgency.setTxHash(externalAgency.getTxHash());
+        }
+
+        ExternalAgency savedAgency = externalAgencyRepository.save(existingExternalAgency);
+        notifyObservers(savedAgency);
+        return savedAgency;
     }
 
     @Override
-    public void deleteExternalAgencyById(Long externalAgencyId){
+    public void deleteExternalAgencyById(Long externalAgencyId) {
         externalAgencyRepository.deleteById(externalAgencyId);
+    }
+
+    @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        for (Observer observer : observers) {
+            observer.update(arg);
+        }
     }
 }

@@ -27,11 +27,11 @@ public class AgencyFacade implements Observer {
     // transactions.
 
     @Override
-    public void update(Subject subject) {
-        if (subject instanceof PIC) {
-            handlePICUpdate((PIC) subject);
-        } else if (subject instanceof ExternalAgency) {
-            handleExternalAgencyUpdate((ExternalAgency) subject);
+    public void update(Object arg) {
+        if (arg instanceof PIC) {
+            handlePICUpdate((PIC) arg);
+        } else if (arg instanceof ExternalAgency) {
+            handleExternalAgencyUpdate((ExternalAgency) arg);
         }
     }
 
