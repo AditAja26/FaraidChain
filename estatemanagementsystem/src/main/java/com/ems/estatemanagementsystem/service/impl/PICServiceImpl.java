@@ -11,11 +11,11 @@ import com.ems.estatemanagementsystem.repository.PICRepository;
 import com.ems.estatemanagementsystem.service.PICService;
 
 @Service
-public class PICServiceImpl implements PICService{
+public class PICServiceImpl implements PICService {
 
     private PICRepository picRepository;
 
-    public PICServiceImpl (PICRepository picRepository) {
+    public PICServiceImpl(PICRepository picRepository) {
         this.picRepository = picRepository;
     }
 
@@ -23,13 +23,14 @@ public class PICServiceImpl implements PICService{
     public PIC savePIC(PIC pic) {
         // ExternalAgency externalAgency = pic.getExternalAgencyInfo();
         // if (externalAgency != null) {
-        //     // If the ExternalAgency associated with the PIC is not null,
-        //     // proceed with saving the PIC
-        //     externalAgencyService.saveNewPIC(pic, externalAgency);
+        // // If the ExternalAgency associated with the PIC is not null,
+        // // proceed with saving the PIC
+        // externalAgencyService.saveNewPIC(pic, externalAgency);
         // } else {
-        //     // If the ExternalAgency is null, handle the case accordingly
-        //     // For example, you could throw an exception or log a warning
-        //     throw new IllegalArgumentException("ExternalAgency associated with the PIC is null");
+        // // If the ExternalAgency is null, handle the case accordingly
+        // // For example, you could throw an exception or log a warning
+        // throw new IllegalArgumentException("ExternalAgency associated with the PIC is
+        // null");
         // }
         return picRepository.save(pic);
     }
@@ -41,6 +42,16 @@ public class PICServiceImpl implements PICService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public PIC getPICById(Long id) {
+        return picRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deletePICById(Long id) {
+        picRepository.deleteById(id);
+    }
+
     private PICDTO convertEntityToDto(PIC pic) {
         PICDTO picDTO = new PICDTO();
         picDTO.setId(pic.getId());
@@ -48,8 +59,8 @@ public class PICServiceImpl implements PICService{
         picDTO.setPicEmail(pic.getPicEmail());
         picDTO.setPicPhoneNum(pic.getPicPhoneNum());
         picDTO.setExternalAgencyInfo(pic.getExternalAgencyInfo());
-        
+
         return picDTO;
     }
-    
+
 }
