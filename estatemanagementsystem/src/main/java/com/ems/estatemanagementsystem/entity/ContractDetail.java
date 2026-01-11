@@ -14,8 +14,11 @@ import lombok.Setter;
 @Embeddable
 public class ContractDetail {
 
-    @Column(name =" transaction_hash")
-    private String transactionHash;
+    @Column(name = "transaction_hash")
+    private String txHash;
+
+    @Column(name = "contract_address")
+    private String contractAddress;
 
     @Column(name = "contract_date")
     private String contractDate;

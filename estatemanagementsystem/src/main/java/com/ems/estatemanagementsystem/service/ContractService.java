@@ -23,14 +23,21 @@ public class ContractService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // Overload for backward compatibility (e.g. PropertyController)
+    public void saveContract(String txHash, String contractDate) {
+        saveContract(txHash, null, contractDate);
+    }
+
     // Save the contract with its details (address, date,)
-    public void saveContract(String transactionHash, String contractDate) {
+    public void saveContract(String txHash, String contractAddress, String contractDate) {
         // Create a new Contract entity
         Contract contract = new Contract();
 
-        // Create a new ContractDetail and set the transaction hash
-        ContractDetail contractDetail = new ContractDetail(transactionHash, LocalDateTime.now().toString());
-        contractDetail.setTransactionHash(transactionHash);
+        // Create a new ContractDetail
+        ContractDetail contractDetail = new ContractDetail();
+        contractDetail.setTxHash(txHash);
+        contractDetail.setContractAddress(contractAddress);
+        contractDetail.setContractDate(contractDate);
 
         // Set the ContractDetail in the Contract entity
         contract.setContractDetail(contractDetail);

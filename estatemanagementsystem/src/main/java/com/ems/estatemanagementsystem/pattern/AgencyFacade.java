@@ -19,6 +19,9 @@ public class AgencyFacade implements Observer {
     @Autowired
     private EmailService emailService;
 
+    // Contract Address (Ideally from config, but hardcoded here as per JS)
+    private static final String AGENCY_CONTRACT_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138";
+
     // In a real scenario, we might have a dedicated LedgerService,
     // but here we reuse ContractService as per the plan/context for logging
     // transactions.
@@ -35,7 +38,8 @@ public class AgencyFacade implements Observer {
     private void handlePICUpdate(PIC pic) {
         if ("ACTIVE".equals(pic.getStatus()) && pic.getTxHash() != null) {
             // 1. Log to Immutable Ledger (Contract)
-            contractService.saveContract(pic.getTxHash(), java.time.LocalDate.now().toString());
+            contractService.saveContract(pic.getTxHash(), AGENCY_CONTRACT_ADDRESS,
+                    java.time.LocalDate.now().toString());
 
             // 2. Send Notification Email
             String subject = "PIC Registration Confirmed";
@@ -55,7 +59,8 @@ public class AgencyFacade implements Observer {
     private void handleExternalAgencyUpdate(ExternalAgency agency) {
         if ("ACTIVE".equals(agency.getStatus()) && agency.getTxHash() != null) {
             // 1. Log to Immutable Ledger (Contract)
-            contractService.saveContract(agency.getTxHash(), java.time.LocalDate.now().toString());
+            contractService.saveContract(agency.getTxHash(), AGENCY_CONTRACT_ADDRESS,
+                    java.time.LocalDate.now().toString());
 
             // 2. Send Notification Email
             String subject = "Agency Registration Confirmed";
